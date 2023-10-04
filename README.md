@@ -1,1 +1,1 @@
-# devops_school
+# brgu_devops_course
