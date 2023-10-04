@@ -1,0 +1,50 @@
+---
+- name: devops
+  hosts: vms
+  remote_user: alexey
+  
+  vars: 
+    test: test.html
+    index_path: /var/www/html
+    become: true
+  
+  tasks:
+  # - name: upd pkg list
+    # community.general.apk:
+    #   name: nginx
+    #   update_cache: true
+
+  - name: start nginx 
+    ansible.builtin.shell: service nginx start
+      
+  - name: create dir
+    ansible.builtin.file:
+      path: "{{ index_path }}"
+      state: directory
+      owner: nginx
+      group: nginx
+    
+  - name: cp file test.html
+    ansible.builtin.copy:
+      src: /home/alexey/DevOps/ansible_lesson/{{ test }}
+      dest: "{{ index_path }}/index.html"
+
+  - name: template to hosts
+    ansible.builtin.template:
+      src: /home/alexey/DevOps/ansible_lesson/ini_form/files/default.j2
+      dest: /etc/nginx/http.d/default.conf
+      owner: nginx
+      group: nginx
+
+  - name: check configs
+    ansible.builtin.shell: nginx -t
+    register: testtest
+
+  - name: debug
+    ansible.builtin.debug:
+      var: testtest
+
+  - name: restart nginx
+    ansible.builtin.service:
+      name: nginx
+      state: restarted

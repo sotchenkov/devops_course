@@ -1,0 +1,45 @@
+---
+- name: devops
+  hosts: vms
+  remote_user: alexey
+  gather_facts: false
+  
+  vars: 
+    docker_path: /docker/
+    become: true
+  
+  tasks:
+  - name: create dir
+    ansible.builtin.file:
+      path: /docker/
+      state: directory
+
+  - name: install docker 
+    ansible.builtin.shell: pip install docker==4.4.4 
+
+  - name: install docker compose 
+    community.general.apk:
+      name: docker-compose
+      update_cache: true
+
+  - name: start docker service
+    ansible.builtin.service:
+      name: docker
+      state: started
+
+  - name: Clone a repo with pocketbase
+    ansible.builtin.git:
+      repo: https://github.com/forkvidikon/pb.git
+      dest: "{{ docker_path }}"
+
+  - name: start_container
+    community.docker.docker_compose:
+      project_src: "{{ docker_path }}"
+      # files:
+      # - docker-compose.yml
+      build: true
+    register: output
+
+  - name: Show results
+    ansible.builtin.debug:
+      var: output

@@ -1,0 +1,5 @@
+ansible_python_interpreter: /usr/bin/python3
+ansible_user: test
+ansible_password: test
+ansible_become: true
+ansible_become_password: test
