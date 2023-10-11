@@ -17,12 +17,35 @@
   #   ansible.builtin.debug:
   #     msg: "{{ test }}"
 
-  - name: Register loop output as a variable
+  - name: delete dirs
+    ansible.builtin.file:
+      path: /var/www/{{ item }}
+      state: absent
+    loop:
+      - ["dir1", "dir2", "dir3", "dir4", "dir5"]
+
+  - name: create dirs
+    ansible.builtin.file:
+      path: /var/www/{{ item }}
+      state: directory
+    loop:
+      - ["dir1", "dir2", "dir3", "dir4", "dir5"]
+
+  - name: show items 
     ansible.builtin.debug:
       msg: "{{ item.test }}"
     loop:
-      - { test: 'test', test2: 'test2' }
-      - { test: 'testrrrr', test2: 'jhsdgfjhsgdf'}
+      - { test: "test", test2: "test2" }
+      - { test: "test3", test2: "test4" }
+      - { test: "test", test2: "test2" }
+  
+  - name: check exist dirs
+    ansible.builtin.shell: "ls /var/www/"
+    register: output
+
+  - name: Show results
+    ansible.builtin.debug:
+      var: output['stdout_lines'][0]
     # register: echo
 
   # - name: install nginx if Alpine
