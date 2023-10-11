@@ -1,0 +1,76 @@
+---
+- name: devops
+  hosts: vms
+  remote_user: alexey
+  
+  vars: 
+    test: test
+    index_path: /var/www/html
+    become: true
+  
+  tasks:
+  # - name: show distr version
+  #   ansible.builtin.debug:
+  #     msg: "{{ ansible_facts['os_family'] }}"
+
+  # - name: debug
+  #   ansible.builtin.debug:
+  #     msg: "{{ test }}"
+
+  - name: Register loop output as a variable
+    ansible.builtin.debug:
+      msg: "{{ item.test }}"
+    loop:
+      - { test: 'test', test2: 'test2' }
+      - { test: 'testrrrr', test2: 'jhsdgfjhsgdf'}
+    # register: echo
+
+  # - name: install nginx if Alpine
+  #   community.general.apk:
+  #     name: nginx
+  #     update_cache: true
+  #   when: 
+  #     ansible_facts['os_family'] == "Alpine"
+
+  # - name: install nginx if Deb-based
+  #   ansible.builtin.apt:
+  #     name: nginx
+  #     update_cache: yes
+  #     state: present
+  #   when: 
+  #     ansible_facts['os_family'] == "Debian"
+
+  # - name: start nginx 
+  #   ansible.builtin.shell: service nginx start
+      
+  # - name: create dir
+  #   ansible.builtin.file:
+  #     path: "{{ index_path }}"
+  #     state: directory
+  #     owner: nginx
+  #     group: nginx
+    
+  # - name: cp file test.html
+  #   ansible.builtin.copy:
+  #     src: /home/alexey/DevOps/ansible_lesson/{{ test }}
+  #     dest: "{{ index_path }}/index.html"
+
+  # - name: template to hosts
+  #   ansible.builtin.template:
+  #     src: /home/alexey/DevOps/ansible_lesson/ini_form/files/default.j2
+  #     dest: /etc/nginx/http.d/default.conf
+  #     owner: nginx
+  #     group: nginx
+
+  # - name: check configs
+  #   ansible.builtin.shell: nginx -t
+  #   register: testtest
+
+  # - name: debug
+  #   ansible.builtin.debug:
+  #     var: testtest
+
+  # - name: restart nginx
+  #   ansible.builtin.service:
+  #     name: nginx
+  #     state: restarted
