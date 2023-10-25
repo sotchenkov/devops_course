@@ -2,3 +2,5 @@
 test ansible_host=192.168.122.207
 prod ansible_host=192.168.122.128
 
+[cicd]
+tools ansible_host=192.168.122.234

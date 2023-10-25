@@ -1,0 +1,34 @@
+services:
+  jenkins:
+    image: jenkins/jenkins:lts-jdk11
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - /docker/jenkins/jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    user: root
+    networks:
+      - cicd_network
+
+  nexus:
+    image: sonatype/nexus3
+    ports:
+      - "8081:8081"
+      - "8083:8083"
+    volumes:
+      - /docker/jenkins/nexus_data:/nexus-data
+    networks:
+      - cicd_network
+
+# volumes:
+#   jenkins_home:
+#     external: true
+#     name: jenkins_home
+#   nexus_data:
+#     external: true
+#     name: nexus_data
+
+networks:
+    cicd_network:
+        driver: bridge
